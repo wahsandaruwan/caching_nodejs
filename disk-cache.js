@@ -1,21 +1,24 @@
-// Disk caching with cache aside
+// Disk caching with Cache aside
 
 const storage = require("node-persist");
 
 (async () => {
-    await storage.init({
-        dir: "diskcache",
-        ttl: 1000 * 60 * 5
-    });
+    // Initialize the cache storage
+    await storage.init(
+        {
+            dir: "diskcache",
+            ttl: 1000 * 60 * 5
+        }
+    );
 
     // Simulate expensive fetch
     async function fetchExpensiveData(key){
         await new Promise(r => setTimeout(r, 200));
         console.log("Fetched from source : ", key);
-        return {key, value: "Expensive result for " + key}
+        return { key, value: "Expensive result for " + key};
     }
 
-    // Cache aside pattern
+    // Cache aside strategy
     async function getCachedData(key){
         const result = await storage.getItem(key);
         if(result){
@@ -27,10 +30,9 @@ const storage = require("node-persist");
         return data;
     }
 
-    let x = null;
-
-    x = await getCachedData("item1");
-    console.log(x);
-    x = await getCachedData("item1");
-    console.log(x);
-})()
+    let dt = null;
+    dt = await getCachedData("item1");
+    console.log(dt);
+    dt = await getCachedData("item1");
+    console.log(dt);
+})();
